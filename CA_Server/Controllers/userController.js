@@ -2,10 +2,7 @@ const userModel=require("../Models/userModel");
 const bcrypt=require("bcrypt");
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-const crypto=require("crypto");
 const { ErrorHandler } = require("../utils/ErrorHandlerClass");
-
- 
 
 
 
@@ -37,6 +34,10 @@ const { ErrorHandler } = require("../utils/ErrorHandlerClass");
       }  
     };
 
+
+
+
+
 const userSignup=async(req,res,next)=>{
   try{
     const {name,email,password}=req.body;
@@ -67,6 +68,9 @@ const userSignup=async(req,res,next)=>{
     }
 }
 
+
+
+
 const verifyEmail = async (req, res,next) => {
   try {
     const { token } = req.query;
@@ -79,10 +83,10 @@ const verifyEmail = async (req, res,next) => {
       const user = await userModel.findById(decode.userid);
   
       if (!user) {
-        return res.status(400).json({ message: 'User not found' });
+        return next(new ErrorHandler("User not found" , 400));
       }
       if (user.verified) {
-        return res.status(400).json({ message: 'User is already verified' });
+        return next(new ErrorHandler("User is already verified" , 400));
       }
       user.verified = true;
       await user.save();
@@ -102,34 +106,36 @@ const verifyEmail = async (req, res,next) => {
     }
   };
 
+
+
+
+
   const Verified=async(req,res,next)=>{
     const email=req.body.email;
       const user=await userModel.findOne({email:email});
       if(!user.verified){
-        return res.status(403).json("Please verify your email first");
+        return next(new ErrorHandler("Please Verify your email first" , 403));
       }
       next();
   }
 
 
+
+
+
+  
   const userLogin=async(req,res,next)=>{
     try{
       const {email,password}=req.body;
       const login=await userModel.findOne({email:email});
       if(!login)
       {
-        return res.status(400).json({
-            msg:"Email not found",
-            status:"400 Bad Request"
-        })
+        return next(new ErrorHandler("Email not found" , 400));
       }
       const validpassword=await bcrypt.compare(password,login.password);
       if(!validpassword)
       {
-        return res.status(400).json({
-            msg:"Incorrect Password",
-            status:"400 Bad Request"
-        })
+        return next(new ErrorHandler("Incorrect password" , 400));
       }
 
       const token=jwt.sign({id:login._id,name:login.name},process.env.JWT_SECRET_KEY,{expiresIn :'90d'});
@@ -143,7 +149,7 @@ const verifyEmail = async (req, res,next) => {
       res.status(200).json({ message: 'You have logged in successfully' });
       } catch (error) {
         console.log(error);
-      res.status(500).json({ message: 'Internal server error' });
+        return next(new ErrorHandler(error.message || "Internal server error" , 200))
     }
 }
 module.exports={
