@@ -1,10 +1,10 @@
 const express=require("express");
 const route=express.Router();
-const userController=require("../Controllers/userController");
+const {userSignup,userLogin,verifyEmail,Verified}=require("../Controllers/userController");
 
-route.post("/usersignup",userController.userSignup);
-route.get("/verifyemail",userController.verifyEmail);
-route.get("/userlogin",userController.Verified,userController.userLogin);
+route.post("/usersignup",userSignup);
+route.get("/verifyemail",verifyEmail);
+route.post("/userlogin",Verified,userLogin);
 
 
 module.exports=route;

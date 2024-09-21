@@ -1,20 +1,37 @@
 import React, { useState } from "react";
+import { useLoginMutation, useRegisterMutation } from "../../Store/API/Api";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [name , setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [login , {isLoading}] = useLoginMutation();
+  const [register] = useRegisterMutation();
+  const [error,setError] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isLogin) {
-       console.log("Logging in with", { email, password });
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      if (isLogin) {
+        const res = await login({email, password});
+        console.log("Logging in with", { email, password });
+        console.log(res)
     } else {
-       console.log("Signing up with", { email, password, confirmPassword });
-    }
+      //check confirm password === pas
+      if(confirmPassword !== password){
+        setError("Password doesn't match with Confirm Password")
+        return;
+      }else setError('');
 
+      const res = await register({email,password, name })
+      console.log(res);
+    }
+    } catch (error) {
+      console.log(error);
+    }
     
   };
 
@@ -56,8 +73,7 @@ const Auth = () => {
           <div className="mb-4">
             <label className="block text-gray-700">Name</label>
             <input
-              type="email"
-              value={email}
+              value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full px-3 py-2 border rounded"
               required
@@ -82,9 +98,10 @@ const Auth = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full px-3 py-2 border rounded"
                 required
-              />
+                />
             </div>
           )}
+          {error && <p className="text-red-500">{error}</p>}
           <div className="flex items-center mb-4">
             <input
               type="checkbox"
@@ -153,10 +170,3 @@ export default Auth;
 
 
 
-// echo "# Finance_Manager" >> README.md
-// git init
-// git add README.md
-// git commit -m "first commit"
-// git branch -M main
-// git remote add origin https://github.com/anmol9630/Finance_Manager.git
-// git push -u origin main
