@@ -1,0 +1,4 @@
+CA_Client/node_modules
+CA_Server/node_modules
+CA_Server/.env
+CA_Client/.env
