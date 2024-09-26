@@ -5,8 +5,8 @@ const {userSignup,userLogin,verifyEmail,Verified,forgotPassword,resetPassword}=r
 route.post("/usersignup",userSignup);
 route.get("/verifyemail",verifyEmail);
 route.post("/userlogin",Verified,userLogin);
-route.post("forgotpassword",forgotPassword);
-route.post("/resetpassword/:token",resetPassword);
+route.post("/forgotpassword",forgotPassword);
+route.post("/resetpassword",resetPassword);
 
 
 module.exports=route;
