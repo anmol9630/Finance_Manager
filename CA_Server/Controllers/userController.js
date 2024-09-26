@@ -152,9 +152,73 @@ const verifyEmail = async (req, res,next) => {
         return next(new ErrorHandler(error.message || "Internal server error" , 200))
     }
 }
+
+
+
+const forgotPassword=async(req,res)=>{
+  const {email}=req.body;
+  try{
+  const user=await userModel.findOne({email:email});
+  if(!user) return next(new ErrorHandler(error.message || "User not found" , 400));
+  const token=jwt.sign({id:user._id},process.env.JWT_SECRET_KEY,{expiresIn:'10m'});
+
+      const url = `${process.env.CLIENT_URL}/resetpassword?token=${token}`;
+
+      const transporter = nodemailer.createTransport({
+        host: 'in-v3.mailjet.com',   
+        port: 587,                   
+        secure: false,               
+        auth: {
+        user: process.env.MAILJET_API_KEY,  //Mailjet API Key (public)
+        pass: process.env.MAILJET_API_SECRET  //Mailjet API Secret (private)
+      }
+    });
+
+      await transporter.sendMail({
+        from: 'chandel486670@gmail.com',
+        to: email,
+        subject: 'Reset Your Password',
+        html: `<p>Please click the link to reset your password:</p> <a href="${url}"><button>Click here to reset password</button></a>`
+      });
+    
+      res.status(200).json({message:"Reset password link has sent to your email"})
+  } catch(error){
+    return next(new ErrorHandler(error.message || "Internal server error" , 200))
+  }
+}
+
+
+
+
+
+const resetPassword=async(req,res)=>{
+  const {token}=req.params;
+  const {password}=req.body;
+  try{
+  const verify=jwt.verify(token,JWT_SECRET_KEY);
+  
+  const user=await userModel.findById(verify.id);
+  if(!user) return next(new ErrorHandler(error.message || "User not found" , 400));
+
+  const salt=await bcrypt.genSalt(10);
+  const hashedpassword=await bcrypt.hash(password,salt);
+
+  user.password=hashedpassword;
+  await user.save();
+
+  res.status(200).json({message:"Password reset successful"});
+
+  } catch(error)
+  {
+    return next(new ErrorHandler(error.message || "Internal server error" , 200))
+  }
+}
+
 module.exports={
     userSignup,
     verifyEmail,
     Verified,
-    userLogin
+    userLogin,
+    forgotPassword,
+    resetPassword
 }
