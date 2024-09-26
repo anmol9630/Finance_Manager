@@ -14,7 +14,7 @@ const VerifyComp = () => {
             const res = await axios.get('http://localhost:3000/user/verifyemail?token='+token);
             console.log(res);
             if(res?.data?.success) {
-                navigator("/")
+                navigator("/home")
             }else{
                 setError(res?.data?.message);
             }
