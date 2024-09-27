@@ -221,11 +221,38 @@ const resetPassword=async(req,res,next)=>{
   }
 }
 
+const adminLogin=async(req,res,next)=>{
+   const {email,password}=req.body;
+   try{
+   const admindata=await userModel.findOne({email:email});
+   if(!admindata){
+      return next(new ErrorHandler(error.message || "Invalid input",400));
+   }
+   const validpassword=await bcrypt.compare(admindata.password,password);
+   if(!validpassword)
+   {
+    return next(new ErrorHandler(error.message || "Invalid input",400));
+   }
+   const token=jwt.sign({id:admindata._id,name:admindata.name},process.env.JWT_SECRET_KEY,{expiresIn:'90d'});
+
+   res.cookie('admin',token,{
+    httpOnly:true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Strict', 
+    maxAge: 90 * 24 * 60 * 60 * 1000
+   });
+   res.status(200).json({message:"You have logged in successfully"})
+   } catch(error){
+    return next(new ErrorHandler(error.message || "Internal server error",500));
+   }
+}
+
 module.exports={
     userSignup,
     verifyEmail,
     Verified,
     userLogin,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    adminLogin
 }
