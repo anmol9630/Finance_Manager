@@ -7,7 +7,6 @@ route.get("/verifyemail",verifyEmail);
 route.post("/userlogin",Verified,userLogin);
 route.post("/forgotpassword",forgotPassword);
 route.post("/resetpassword",resetPassword);
-route.post("/adminlogin",adminLogin)
 
 
 module.exports=route;
