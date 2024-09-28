@@ -30,4 +30,4 @@ const VerifyComp = () => {
   )
 }
 
-export default VerifyComp
+export default VerifyComp;

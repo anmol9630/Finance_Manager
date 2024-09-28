@@ -7,6 +7,7 @@ const dotenv=require("dotenv");
 const userRoute=require("./Routes/userRoute");
 const morgan = require("morgan")
 const {Error} = require("./middleware/ErrorHandler");
+const adminRoute=require("./Routes/adminRoute");
 
 dotenv.config();
 const port=process.env.PORT || 8000;
@@ -32,6 +33,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use("/user",userRoute);
+app.use("/admin",adminRoute);
 
 
 app.use(Error)

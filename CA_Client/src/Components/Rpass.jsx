@@ -14,9 +14,8 @@ const Rpass=()=>{
 
     const handlesubmit=()=>{
        
-        let api = `http://localhost:3000/user/forgotpassword/${token}`
-
-        axios.post(api,{password : password}).then((res)=>{
+        let api = "http://localhost:3000/user/resetpassword";
+        axios.post(api,{token:token,password : password}).then((res)=>{
             alert(res.data.message);
         })
        
