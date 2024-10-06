@@ -1,8 +1,9 @@
 const express=require("express");
 const route=express.Router();
-const {userSignup,userLogin,verifyEmail,Verified,forgotPassword,resetPassword,adminLogin}=require("../Controllers/userController");
+const {userSignup,userLogin,verifyEmail,Verified,forgotPassword,resetPassword,adminLogin,userInfo}=require("../Controllers/userController");
 
 route.post("/usersignup",userSignup);
+route.get('/me' , userInfo)
 route.get("/verifyemail",verifyEmail);
 route.post("/userlogin",Verified,userLogin);
 route.post("/forgotpassword",forgotPassword);

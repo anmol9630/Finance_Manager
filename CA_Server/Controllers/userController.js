@@ -3,7 +3,7 @@ const bcrypt=require("bcrypt");
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const { ErrorHandler } = require("../utils/ErrorHandlerClass");
-
+const {VerifyToken} = require('../helper/VerifyToken')
 
 
 
@@ -170,7 +170,6 @@ const resetPasswordMail=(token,email)=>{
         subject: 'Reset Your Password',
         html: `<p>Please click the link to reset your password:</p> <a href="${url}"><button>Click here to reset password</button></a>`
       });
-    
       } catch(error)
       {
         return next(new ErrorHandler(error.message || "Internal server error" , 500))
@@ -221,6 +220,16 @@ const resetPassword=async(req,res,next)=>{
   }
 }
 
+const userInfo = async (req,res,next) => {
+      const token = req.cookies['Finance_CA'];
+      if(!token) return next(new ErrorHandler('No Token found' , 400));
+      const {id} = VerifyToken(token);
+      if(!id) return next(new ErrorHandler('Invalid User id' , 400));
+      const user = await userModel.findById(id);
+      if(!user) return next(new ErrorHandler('No user found' , 400));
+      res.status(200).json({success:true , user})
+}
+
 module.exports={
     userSignup,
     verifyEmail,
@@ -228,4 +237,5 @@ module.exports={
     userLogin,
     forgotPassword,
     resetPassword,
+    userInfo
 }
