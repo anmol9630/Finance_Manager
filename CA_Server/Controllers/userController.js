@@ -107,19 +107,6 @@ const verifyEmail = async (req, res,next) => {
 
 
 
-  const Verified=async(req,res,next)=>{
-    const email=req.body.email;
-      const user=await userModel.findOne({email:email});
-      if(!user.verified){
-        return next(new ErrorHandler("Please Verify your email first" , 403));
-      }
-      next();
-  }
-
-
-
-
-
   
   const userLogin=async(req,res,next)=>{
     try{
@@ -233,7 +220,6 @@ const userInfo = async (req,res,next) => {
 module.exports={
     userSignup,
     verifyEmail,
-    Verified,
     userLogin,
     forgotPassword,
     resetPassword,
