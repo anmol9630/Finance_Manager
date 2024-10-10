@@ -8,7 +8,7 @@ const {VerifyToken} = require('../helper/VerifyToken')
 
 
 
-    const sendVerificationEmail = (email, token) => {
+const sendVerificationEmail = (email, token) => {
       try{
         const url = `${process.env.CLIENT_URL}/verify?token=${token}`;
 
