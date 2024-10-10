@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Auth from './Components/Auth'
+import Auth from './Pages/Auth'
 import VerifyComp from './Components/VerifyComp';
-import Home from './Components/Home';
+import Home from './Pages/Home';
 import Fpass from './Components/Fpass';
 import Rpass from './Components/Rpass';
 import Layout from "./Layout/Layout";
@@ -9,6 +9,7 @@ import ProtectedRoutes from "./Hooks/ProtectedRoutes";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import axios from "axios";
+import ProfilePage from "./Pages/Profile";
 const App = () => {
   
   const [user , setUser] = useState(false); 
@@ -30,14 +31,16 @@ const App = () => {
 
     <BrowserRouter>
             <Routes>
-               <Route element={<ProtectedRoutes user={user}/>} >
+               {/* <Route element={<ProtectedRoutes user={user}/>} > */}
                   <Route element={<Layout/>}>
                     <Route path='/' element={<Home/>} />
+                    {/* <Route path='/profile' element={<ProfilePage/>} /> */}
                     <Route path='/verify' element={<VerifyComp/>}/>
                     <Route path='/fpass' element={<Fpass/>}/>
                     <Route path='/resetpassword' element={<Rpass/>}/>
+
                   </Route>
-               </Route>
+               {/* </Route> */}
                <Route path='/auth' element={
                 <ProtectedRoutes user={!user} redirect="/">
                   <Auth/>
@@ -52,3 +55,4 @@ const App = () => {
 };
 
 export default App;
+
