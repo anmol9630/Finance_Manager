@@ -11,13 +11,13 @@ const Layout = () => {
 
           <ul className="flex gap-4">
             <li>
-              <NavLink className="text-white hover:text-stone-950 " to="/home">
+              <NavLink className="text-white hover:text-stone-950 " to="/">
                 Home
               </NavLink>
             </li>
              <li>
               <NavLink className="text-white hover:text-stone-950" to="/Insert">
-                +Butget
+                +Budget
               </NavLink>
             </li>
             <li>

@@ -13,10 +13,10 @@ const VerifyComp = () => {
         const verifyEmail =async () => {
             const res = await axios.get('http://localhost:3000/user/verifyemail?token='+token);
             console.log(res);
-            if(res?.data?.success) {
-                navigator("/home")
+            if(res.data.success) {
+                navigator("/")
             }else{
-                setError(res?.data?.message);
+                setError(res.data.message);
             }
         }
         verifyEmail();
